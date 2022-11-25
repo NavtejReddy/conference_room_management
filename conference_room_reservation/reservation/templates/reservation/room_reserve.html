@@ -1,0 +1,44 @@
+{% extends "reservation/base.html" %}
+{% block title %}Book a room{% endblock %}
+{% block content %} {{ block.super }}
+    <h2>Book a '{{ room.name }}' room:</h2>
+
+    <form method="post">{% csrf_token %}
+        <table>
+            <tr>
+                <th><label for="id_date">Booking date:</label></th>
+                <td><input type="date" id="id_date" name="date" required min="{% now "Y-m-d" %}">
+                    {% if message %}<br>
+                        <ul>
+                            <li>{{ message }}</li>
+                        </ul>{% endif %}</td>
+            </tr>
+            <tr>
+                <th><label for="id_comment">Comment:</label></th>
+                <td><input type="text" name="comment" maxlength="128" id="id_comment"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Submit</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <table id="customers">
+        <caption>Reservations:</caption>
+        <tr>
+            <th>date</th>
+            <th>comment</th>
+        </tr>
+        {% for obj in reservations %}
+            <tr>
+                <td>{{ obj.date|date:"Y F j" }}</td>
+                <td>{{ obj.comment }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2">No future bookings for room {{ room.name }}.</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

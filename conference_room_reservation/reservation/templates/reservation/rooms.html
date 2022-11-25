@@ -1,0 +1,47 @@
+{% extends "reservation/base.html" %}
+{% block title %} Rooms {% endblock %}
+{% block content %}
+    <table id="customers">
+        {% if rooms %}
+            <tr>
+                <th>no.</th>
+                <th>name</th>
+                <th>capacity</th>
+                <th>available today</th>
+                <th>projector availability</th>
+                <th>edit room</th>
+                <th>delete room</th>
+                <th>book room</th>
+            </tr>
+            {% for room in rooms %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'room-details' room.pk %}">{{ room.name }}</a></td>
+                    <td>{{ room.capacity }}</td>
+                    {% if room.reserved %}
+                        <td style="color:red;">unavailable</td>
+                    {% else %}
+                        <td style="color:green;">available</td>
+                    {% endif %}
+                    {#                    <td>{{ room.projector|yesno:"yeah,no,maybe" }}</td>#}
+                    {% if room.projector %}
+                        <td style="color:green;">&#9745;</td>
+                    {% else %}
+                        <td style="color:red;">&#9746;</td>
+                    {% endif %}
+                    <td><a href="{% url 'room-modify' room.pk %}">
+                        <button>edit {{ room.name }}</button>
+                    </a></td>
+                    <td><a href="{% url 'room-delete' room.pk %}">
+                        <button>delete {{ room.name }}</button>
+                    </a></td>
+                    <td><a href="{% url 'room-reserve' room.pk %}">
+                        <button>reserve {{ room.name }}</button>
+                    </a></td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <h1>No rooms available</h1>
+        {% endif %}
+{% endblock %}
